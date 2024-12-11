@@ -1,7 +1,8 @@
-import pytest
 import allure
+import pytest
 
-from data.data import COURIER_DATA_WITHOUT_LOGIN, COURIER_DATA_WITHOUT_PASSWORD
+from data.data import COURIER_DATA_WITHOUT_LOGIN
+from data.messages import ACCOUNT_NOT_FOUND, NOT_ENOGHT_DATA_FOR_LOGIN
 from methods.courier_methods import CourierMethods
 
 
@@ -23,7 +24,7 @@ class TestCourierLogin:
         }
         status_code, json = CourierMethods.login_courier(incorrect_login_data)
 
-        assert status_code == 404 and json['message'] == 'Учетная запись не найдена', f'Info: status code: {status_code}, json: {json}, incorrect_login_data: {incorrect_login_data}'
+        assert status_code == 404 and json['message'] == ACCOUNT_NOT_FOUND, f'Info: status code: {status_code}, json: {json}, incorrect_login_data: {incorrect_login_data}'
 
     @pytest.mark.parametrize(
         "login_courier_data",
@@ -36,7 +37,7 @@ class TestCourierLogin:
     def test_login_courier_without_all_requirement_parameters_returns_error(self, login_courier_data: dict):
         status_code, json = CourierMethods.login_courier(login_courier_data)
 
-        assert status_code == 400 and json['message'] == 'Недостаточно данных для входа', f'Info: status code: {status_code}, json: {json}, login_courier_data: {login_courier_data}'
+        assert status_code == 400 and json['message'] == NOT_ENOGHT_DATA_FOR_LOGIN, f'Info: status code: {status_code}, json: {json}, login_courier_data: {login_courier_data}'
 
     @allure.title("Вход с существующим курьером возвращает ID")
     def test_login_with_existing_courier_returns_id(self, existing_courier):
